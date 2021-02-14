@@ -1,25 +1,21 @@
 class Api::V1::MerchantsController < ApplicationController
   def index
-    merchants = Merchant.all
-    merchants = Merchant.page(page).per_page(per_page)
+    merchants = Merchant.limit(per_page).offset(page)
     render json: MerchantSerializer.new(merchants)
   end
 
   private
 
   def page
-    @page ||= params[:page] || 1
+    return 0 if params[:page].nil?
+    (params.fetch(:page).to_i - 1) * 20
   end
 
   def per_page
-    @per_page ||= params[:per_page] || 20
+    [
+      params.fetch(:per_page, 20).to_i,
+      100
+    ].min
   end
-end
 
-# respond_with. merchants, meta: {
-#   current_page: merchants.current_page,
-#   next_page: merchants.next_page,
-#   prev_page: merchants.prev_page,
-#   total_pages: merchants.total_pages,
-#   total_count: merchants.total_count
-# }
+end
