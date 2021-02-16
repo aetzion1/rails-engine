@@ -5,7 +5,7 @@ namespace :api do
     resources :merchants, only: [:index, :show] do
       resources :items, only: [:index]
     end
-    resources :items, only: [:index, :show]
+    resources :items, only: [:index, :show, :create, :new, :update, :destroy]
   end
 end
 

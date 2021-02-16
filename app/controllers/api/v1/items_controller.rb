@@ -1,12 +1,11 @@
 class Api::V1::ItemsController < ApplicationController
   def index
-    @merchant = Merchant.find(params[:merchant_id])
     if params[:merchant_id].nil?
       @items = Item.all
-    elsif @merchant.nil?
-      return render text: 'Merchant Not Found', status: :not_found
-    else
+    elsif Merchant.exists?(id: params[:merchant_id])
       @items = Item.where('merchant_id = ?', params[:merchant_id])
+    else
+      return render text: 'Merchant Not Found', status: :not_found
     end
     render json: ItemSerializer.new(@items.sorted)
   end
@@ -20,17 +19,17 @@ class Api::V1::ItemsController < ApplicationController
     # require 'pry'; binding.pry
   end
 
-  # def create
-  #   render json: Book.create(book_params)
-  # end
+  def create
+    render json: Item.create(item_params)
+  end
 
-  # def update
-  #   render json: Book.update(params[:id], book_params)
-  # end
+  def update
+    render json: Item.update(params[:id], item_params)
+  end
 
-  # def destroy
-  #   render json: Book.delete(params[:id])
-  # end
+  def destroy
+    render json: Item.delete(params[:id])
+  end
 
   private
 
@@ -38,7 +37,8 @@ class Api::V1::ItemsController < ApplicationController
     params.require(:item).permit(
       :name,
       :description,
-      :unit_price
+      :unit_price,
+      :merchant
     )
   end
 end
