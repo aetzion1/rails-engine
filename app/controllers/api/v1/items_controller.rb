@@ -1,7 +1,11 @@
 class Api::V1::ItemsController < ApplicationController
   def index
     if params[:merchant_id].nil?
-      @items = Item.all
+      if params.fetch(:per_page, 20).to_i >= 250000
+        @items = Item.all
+      else
+        @items = Item.limit(per_page).offset(page)
+      end
     elsif Merchant.exists?(id: params[:merchant_id])
       @items = Item.where('merchant_id = ?', params[:merchant_id])
     else
@@ -12,7 +16,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def show
     @item = Item.find(params[:id])
-    ItemSerializer.new(@item)
+    render json: ItemSerializer.new(@item)
 
     # options[:include] = [:stores, :'stores.name']
     # serializable_hash = BookSerializer.new([@book], options).serializable_hash
@@ -40,5 +44,20 @@ class Api::V1::ItemsController < ApplicationController
       :unit_price,
       :merchant
     )
+  end
+
+  def page
+    return 0 if params[:page].nil?
+
+    (params.fetch(:page).to_i - 1) * 20
+    # ADD SAD PATH TO ENSURE PAGE >= 1
+    # ADD SAD PATH, PAGE HIGHER THAN MAX
+  end
+
+  def per_page
+    [
+      params.fetch(:per_page, 20).to_i,
+      100
+    ].min
   end
 end
