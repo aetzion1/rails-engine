@@ -1,8 +1,11 @@
 class Api::V1::ItemsController < ApplicationController
   def index
-    @items = Item.all
+    if params[:id].nil?
+      @items = Item.all
+    else
+      @items = Item.find_by(merchant_id: params[:id])
+    end
     render json: ItemSerializer.new(@items)
-
   end
 
   def show
@@ -12,7 +15,6 @@ class Api::V1::ItemsController < ApplicationController
     # options[:include] = [:stores, :'stores.name']
     # serializable_hash = BookSerializer.new([@book], options).serializable_hash
     # require 'pry'; binding.pry
-
   end
 
   # def create
