@@ -1,11 +1,16 @@
 class Api::V1::ItemsController < ApplicationController
   def index
-    if params[:id].nil?
+    @merchant = Merchant.find(params[:merchant_id])
+    if params[:merchant_id].nil?
       @items = Item.all
     else
-      @items = Item.find_by(merchant_id: params[:id])
+      if @merchant.nil?
+        return render :text => "Merchant Not Found", :status => 404
+      else
+        @items = Item.where('merchant_id = ?', params[:merchant_id])
+      end
     end
-    render json: ItemSerializer.new(@items)
+    render json: ItemSerializer.new(@items.sorted)
   end
 
   def show
