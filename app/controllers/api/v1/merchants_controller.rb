@@ -13,7 +13,10 @@ class Api::V1::MerchantsController < ApplicationController
 
   def page
     return 0 if params[:page].nil?
+
     (params.fetch(:page).to_i - 1) * 20
+    # ADD SAD PATH TO ENSURE PAGE >= 1
+    # ADD SAD PATH, PAGE HIGHER THAN MAX
   end
 
   def per_page
@@ -22,5 +25,4 @@ class Api::V1::MerchantsController < ApplicationController
       100
     ].min
   end
-
 end

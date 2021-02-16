@@ -3,12 +3,10 @@ class Api::V1::ItemsController < ApplicationController
     @merchant = Merchant.find(params[:merchant_id])
     if params[:merchant_id].nil?
       @items = Item.all
+    elsif @merchant.nil?
+      return render text: 'Merchant Not Found', status: :not_found
     else
-      if @merchant.nil?
-        return render :text => "Merchant Not Found", :status => 404
-      else
-        @items = Item.where('merchant_id = ?', params[:merchant_id])
-      end
+      @items = Item.where('merchant_id = ?', params[:merchant_id])
     end
     render json: ItemSerializer.new(@items.sorted)
   end
@@ -35,11 +33,12 @@ class Api::V1::ItemsController < ApplicationController
   # end
 
   private
-    def item_params
-      params.require(:item).permit(
-                                    :name,
-                                    :description,
-                                    :unit_price
-                                  )
-    end
+
+  def item_params
+    params.require(:item).permit(
+      :name,
+      :description,
+      :unit_price
+    )
+  end
 end
