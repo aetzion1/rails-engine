@@ -10,17 +10,12 @@ class Api::V1::ItemsController < ApplicationController
 
   def show
     @item = Item.find(params[:id])
-    require 'pry'; binding.pry
     render json: ItemSerializer.new(@item)
   end
   
-  def new
-    # require 'pry'; binding.pry
-  end
-
   def create
-    # require 'pry'; binding.pry
-    render json: Item.create(item_params)
+    @item = Item.create(item_params)
+    render json: ItemSerializer.new(@item), status: '201'
   end
 
   def update
