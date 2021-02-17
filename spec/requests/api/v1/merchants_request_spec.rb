@@ -13,7 +13,6 @@ describe "Merchants API" do
 
       # WHY DO I NOW NEED TO DO MERCHANTS[:DATA]? DID NOT BEFORE IMPLEMENTING FAST JSON
       expect(merchants[:data].count).to eq(3)
-      require 'pry'; binding.pry
       merchants[:data].each do |merchant|
         expect(merchant).to have_key(:id)
         expect(merchant[:id]).to be_an(String)
