@@ -3,7 +3,6 @@ class Api::V1::Merchants::ItemsController < ApplicationController
     if Merchant.exists?(id: params[:merchant_id])
       @items = Item.where('merchant_id = ?', params[:merchant_id])
     else
-      # SHOULD STILL RENDER EMPTY ARRAY. UPDATE THIS.
       return render text: 'Merchant Not Found', status: :not_found
     end
     render json: ItemSerializer.new(@items.sorted)

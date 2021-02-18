@@ -34,9 +34,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    # require 'pry'; binding.pry
     Item.destroy(params[:id])
-    # render status: '204'
   end
 
   private
@@ -53,10 +51,8 @@ class Api::V1::ItemsController < ApplicationController
   def page
     return 0 if params[:page].nil?
 
-    # ASK INSTRUCTORS IF ABOVE IS OK. DID NOT WANT TO DEFAULT TO 1.
+    # QUESTION: ASK INSTRUCTORS IF ABOVE IS OK. DID NOT WANT TO DEFAULT TO 1.
     (params.fetch(:page).to_i - 1) * 20
-    # ADD SAD PATH TO ENSURE PAGE >= 1
-    # ADD SAD PATH, PAGE HIGHER THAN MAX
   end
 
   def per_page
