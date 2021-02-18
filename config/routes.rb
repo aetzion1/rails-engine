@@ -7,6 +7,7 @@ namespace :api do
     end
     namespace :merchants do
       get '/find', to: 'search#show', as: :find_merchant
+      get '/most_items', to: 'most_items#index'
     end
     resources :merchants, only: [:index, :show] do
       get '/items', to: 'merchants/items#index', as: :find_items
