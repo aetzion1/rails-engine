@@ -4,14 +4,14 @@ class Item < ApplicationRecord
 
   scope :sorted, -> { order(id: :asc) }
 
-  self.top_items_by_revenue do 
-    joins(invoice_items: {invoices: :transactions})
-      .where("invoices.status = 'shipped' AND transactions.result = 'success'")
-      .group("items.id")
-      .select("items.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
-      .order("revenue DESC")
-      .limit(10)
-  end
+  # self.top_items_by_revenue do 
+  #   joins(invoice_items: {invoices: :transactions})
+  #     .where("invoices.status = 'shipped' AND transactions.result = 'success'")
+  #     .group("items.id")
+  #     .select("items.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
+  #     .order("revenue DESC")
+  #     .limit(10)
+  # end
 
   # Item.joins(invoice_items: {invoices: :transactions}).where("invoices.status = 'shipped' AND transactions.result = 'success'").group("items.id").select("items.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue").order("revenue DESC").limit(10)
 
