@@ -1,6 +1,8 @@
 class Api::V1::Revenue::MerchantsController < ApplicationController
   def index
-    require 'pry'; binding.pry
+    @merchants = Merchant.sort_by_revenue(params[:quantity])
+    # require 'pry'; binding.pry
+    render json: RevenueSerializer.new(@merchants)
   end
 
   private
