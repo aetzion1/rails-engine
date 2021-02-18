@@ -2,6 +2,9 @@ Rails.application.routes.draw do
 # MERCHANTS routes
 namespace :api do
   namespace :v1 do
+    namespace :revenue do
+      get '/merchants', to: 'merchants#index'
+    end
     namespace :merchants do
       get '/find', to: 'search#show', as: :find_merchant
     end
