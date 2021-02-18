@@ -1,10 +1,10 @@
 class Api::V1::ItemsController < ApplicationController
   def index
-    if params.fetch(:per_page, 20).to_i >= 250_000
-      @items = Item.all
-    else
-      @items = Item.limit(per_page).offset(page)
-    end
+    @items = if params.fetch(:per_page, 20).to_i >= 250_000
+               Item.all
+             else
+               Item.limit(per_page).offset(page)
+             end
     render json: ItemSerializer.new(@items.sorted)
   end
 
@@ -22,15 +22,15 @@ class Api::V1::ItemsController < ApplicationController
     if params[:merchant_id]
       if Merchant.exists?(id: params[:merchant_id])
         @item = Item.update(params[:id], item_params)
-      else 
-        return render text: 'Merchant Not Found', status: '404'            
+      else
+        return render text: 'Merchant Not Found', status: '404'
       end
     elsif Item.exists?(id: params[:id])
       @item = Item.update(params[:id], item_params)
     else
-      return render text: 'Merchant Not Found', status: '404'            
+      return render text: 'Merchant Not Found', status: '404'
     end
-      render json: ItemSerializer.new(@item)
+    render json: ItemSerializer.new(@item)
   end
 
   def destroy
