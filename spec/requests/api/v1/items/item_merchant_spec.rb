@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Item Items API' do
+describe 'Item Merchant API' do
   describe 'index happy paths' do
     it 'sends a list merchant for an item' do
       merchant = create(:merchant_with_items)
