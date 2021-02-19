@@ -5,4 +5,8 @@ class Invoice < ApplicationRecord
   has_many :transactions, dependent: :destroy
 
   enum status: [:unshipped, :shipped]
+
+  scope :date_between, -> (start_date, end_date) {
+		where("invoices.updated_at >= ? AND invoices.updated_at <= ?", start_date, end_date)
+  }
 end

@@ -18,7 +18,7 @@ namespace :api do
     resources :items, only: [:index, :show, :create, :new, :update, :destroy] do
       get '/merchant', to: 'items/merchants#show'
     end
-
+    resources :revenue, only: [:index]
   end
 end
 
