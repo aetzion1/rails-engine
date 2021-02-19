@@ -1,5 +1,5 @@
 class Api::V1::Items::SearchController < ApplicationController
-  def index
+  def find_all
     @items = if item_params[:name].blank?
                nil
              else

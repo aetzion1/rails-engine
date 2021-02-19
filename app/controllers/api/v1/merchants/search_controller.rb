@@ -1,5 +1,5 @@
 class Api::V1::Merchants::SearchController < ApplicationController
-  def show
+  def find_one
     # return nil if merchant_params[:name].blank?
     @merchant = if merchant_params[:name].blank?
                   nil
