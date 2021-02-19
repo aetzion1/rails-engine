@@ -3,7 +3,7 @@ class InvoiceItem < ApplicationRecord
   belongs_to :invoice, dependent: :destroy
 
   validates :unit_price, presence: true
-	validates :quantity, presence: true
+  validates :quantity, presence: true
 
   # def self.revenue
   #   joins(invoices: :transactions)

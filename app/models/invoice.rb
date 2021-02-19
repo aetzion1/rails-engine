@@ -6,12 +6,12 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
 
   validates :customer_id, presence: true
-	validates :merchant_id, presence: true
-	validates :status, presence: true
+  validates :merchant_id, presence: true
+  validates :status, presence: true
 
-  enum status: [:unshipped, :shipped]
-  
-  scope :date_between, -> (start_date, end_date) {
-		where("invoices.updated_at >= ? AND invoices.updated_at <= ?", Date.parse(start_date), Date.parse(end_date).end_of_day)
+  enum status: { unshipped: 0, shipped: 1 }
+
+  scope :date_between, lambda { |start_date, end_date|
+    where('invoices.updated_at >= ? AND invoices.updated_at <= ?', Date.parse(start_date), Date.parse(end_date).end_of_day)
   }
 end
