@@ -173,4 +173,20 @@ describe 'Items API' do
       expect(Item.count).to eq(3)
     end
   end
+
+  describe 'update happy path' do
+    it 'allows you to update an item' do 
+      merchant = create(:merchant)
+      item = create(:item, name: "name1", merchant_id: merchant.id)
+      
+      Item.update(item.id, name: "name2")
+
+      expect(Item.first.name).to eq("name2")
+
+      Item.update(item.id, name: "name1")
+
+      expect(Item.first.name).to eq("name1")
+    end
+  end
+
 end
