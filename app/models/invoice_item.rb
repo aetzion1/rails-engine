@@ -4,4 +4,10 @@ class InvoiceItem < ApplicationRecord
 
   validates :unit_price, presence: true
 	validates :quantity, presence: true
+
+  # def self.revenue
+  #   joins(invoices: :transactions)
+  #   .where("invoices.status = ? AND transactions.result = ?", 'shipped', 'success')
+  #   .sum('invoice_items.quantity * invoice_items.unit_price')
+  # end
 end

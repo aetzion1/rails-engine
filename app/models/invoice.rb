@@ -10,7 +10,7 @@ class Invoice < ApplicationRecord
 	validates :status, presence: true
 
   enum status: [:unshipped, :shipped]
-
+  
   scope :date_between, -> (start_date, end_date) {
 		where("invoices.updated_at >= ? AND invoices.updated_at <= ?", Date.parse(start_date), Date.parse(end_date).end_of_day)
   }
