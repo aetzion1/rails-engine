@@ -4,6 +4,7 @@ namespace :api do
   namespace :v1 do
     namespace :revenue do
       get '/merchants', to: 'merchants#index'
+      get '/items', to: 'items#index'
     end
     namespace :merchants do
       get '/find', to: 'search#show', as: :find_merchant
