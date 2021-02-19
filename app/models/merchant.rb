@@ -6,6 +6,9 @@ class Merchant < ApplicationRecord
   has_many :invoice_items, through: :items
   # scope :sorted, -> { order(id: :asc) }
 
+  validates :name, presence: true
+  
+
   private
 
   def self.most_revenue(limit)

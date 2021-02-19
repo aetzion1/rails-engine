@@ -3,6 +3,11 @@ class Invoice < ApplicationRecord
   belongs_to :customer, dependent: :destroy
   has_many :invoice_items, dependent: :destroy
   has_many :transactions, dependent: :destroy
+  has_many :items, through: :invoice_items
+
+  validates :customer_id, presence: true
+	validates :merchant_id, presence: true
+	validates :status, presence: true
 
   enum status: [:unshipped, :shipped]
 
