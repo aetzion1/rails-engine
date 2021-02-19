@@ -9,15 +9,18 @@ namespace :api do
     end
 
     namespace :merchants do
-      get '/find', to: 'search#show', as: :find_merchant
-      get '/most_items', to: 'most_items#index'
+      get '/find', to: 'search#find_one', as: :findone
+      get '/most_items', to: 'bizint#most_items', as: :bizint_most_items
+      get '/:id/items', to: 'items#index', as: :items
     end
-    resources :merchants, only: [:index, :show] do
-      get '/items', to: 'merchants/items#index', as: :find_items
-    end
+
+    
     namespace :items do
       get '/find_all', to: 'search#index'
     end
+
+    resources :merchants, only: [:index, :show]
+
     resources :items, only: [:index, :show, :create, :new, :update, :destroy] do
       get '/merchant', to: 'items/merchants#show'
     end
