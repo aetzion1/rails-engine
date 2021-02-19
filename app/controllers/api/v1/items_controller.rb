@@ -51,6 +51,8 @@ class Api::V1::ItemsController < ApplicationController
   def page
     return 0 if params[:page].nil?
 
+    return 0 if params[:page].to_i <= 0
+
     # QUESTION: ASK INSTRUCTORS IF ABOVE IS OK. DID NOT WANT TO DEFAULT TO 1.
     (params.fetch(:page).to_i - 1) * 20
   end
