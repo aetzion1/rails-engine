@@ -14,16 +14,14 @@ namespace :api do
       get '/:id/items', to: 'items#index', as: :items
     end
 
-    
     namespace :items do
-      get '/find_all', to: 'search#index'
+      get '/find_all', to: 'search#find_all', as: :findall
+      get '/:id/merchant', to: 'merchants#index', as: :merchant
     end
 
     resources :merchants, only: [:index, :show]
 
-    resources :items, only: [:index, :show, :create, :new, :update, :destroy] do
-      get '/merchant', to: 'items/merchants#show'
-    end
+    resources :items, only: [:index, :show, :create, :new, :update, :destroy]
     # resources :revenue, only: [:index]
   end
 end
