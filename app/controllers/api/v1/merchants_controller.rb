@@ -14,6 +14,8 @@ class Api::V1::MerchantsController < ApplicationController
   def page
     return 0 if params[:page].nil?
 
+    return 0 if params[:page].to_i <= 0
+
     (params.fetch(:page).to_i - 1) * 20
   end
 

@@ -5,6 +5,9 @@ class Item < ApplicationRecord
 	# has_many :transactions, through: :invoices
 
   validates :merchant_id, presence: true
+  validates :name, presence: true
+	validates :unit_price, presence: true, numericality: {only_float: true}
+	validates :description, presence: true
 
   scope :sorted, -> { order(id: :asc) }
 

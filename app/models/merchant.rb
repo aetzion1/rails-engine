@@ -6,6 +6,9 @@ class Merchant < ApplicationRecord
   has_many :invoice_items, through: :items
   # scope :sorted, -> { order(id: :asc) }
 
+  validates :name, presence: true
+  
+
   private
 
   def self.most_revenue(limit)
@@ -30,6 +33,13 @@ class Merchant < ApplicationRecord
     joins(invoices: [:invoice_items, :transactions])
     .where("invoices.status = ? AND transactions.result = ?", 'shipped', 'success')
     .merge(Invoice.date_between(start_date, end_date))
+    .sum('invoice_items.quantity * invoice_items.unit_price')
+  end
+
+  def self.merchant_revenue(merchant_id)
+    joins(invoices: [:invoice_items, :transactions])
+    .where("invoices.status = ? AND transactions.result = ?", 'shipped', 'success')
+    .where("merchants.id = ?", "#{merchant_id}")
     .sum('invoice_items.quantity * invoice_items.unit_price')
   end
 
