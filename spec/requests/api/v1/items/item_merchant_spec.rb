@@ -20,13 +20,13 @@ describe 'Item Merchant API' do
   end
 
   describe 'index sad path' do
-    xit 'returns 404 if bad integer provided' do
+    it 'returns 404 if bad integer provided' do
       get "/api/v1/items/78453/merchant"
 
       expect(response).to_not be_successful
     end
 
-    xit 'returns 404 if string id provided' do
+    it 'returns 404 if string id provided' do
       get "/api/v1/items/hsdksaf/merchant"
 
       expect(response).to_not be_successful

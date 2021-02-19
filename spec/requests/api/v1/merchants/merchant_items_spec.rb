@@ -19,13 +19,13 @@ describe 'Merchant Items API' do
   end
 
   describe 'index sad path' do
-    xit 'returns 404 if bad integer provided' do
+    it 'returns 404 if bad integer provided' do
       get '/api/v1/merchants/100013/items'
 
       expect(response).to_not be_successful
     end
 
-    xit 'returns 404 if string id provided' do
+    it 'returns 404 if string id provided' do
       get '/api/v1/merchants/ashkjf/items'
 
       expect(response).to_not be_successful

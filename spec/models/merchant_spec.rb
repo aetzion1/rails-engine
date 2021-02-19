@@ -14,13 +14,13 @@ RSpec.describe Merchant, type: :model do
     before(:each) do
       @nameco = create(:merchant, name: 'THE NAME CO')
       @item1 = create(:item, merchant_id: @nameco.id)
-      @invoice1 = create(:invoice, merchant: @nameco, status: 'shipped')
+      @invoice1 = create(:invoice, merchant: @nameco, status: 1)
       create(:invoice_item, item: @item1, invoice: @invoice1, quantity: 10, unit_price: 10.00)
       create(:transaction, invoice: @invoice1)
       @merchant2 = create(:merchant_with_items)
-      @invoice2 = create(:invoice, merchant: @merchant2, status: 'shipped')
-      @invoice3 = create(:invoice, merchant: @merchant2, status: 'unshipped')
-      @invoice4 = create(:invoice, merchant: @merchant2, status: 'shipped')
+      @invoice2 = create(:invoice, merchant: @merchant2, status: 1)
+      @invoice3 = create(:invoice, merchant: @merchant2, status: 0)
+      @invoice4 = create(:invoice, merchant: @merchant2, status: 1)
       create(:invoice_item, item: @merchant2.items.first, invoice: @invoice2, quantity: 20, unit_price: 10.00)
       create(:invoice_item, item: @merchant2.items.second, invoice: @invoice2, quantity: 1, unit_price: 100.00)
       create(:invoice_item, item: @merchant2.items.third, invoice: @invoice3, quantity: 1, unit_price: 100.00)
@@ -32,9 +32,7 @@ RSpec.describe Merchant, type: :model do
 
     it 'most_revenue' do
       merchants = Merchant.most_revenue(2)
-      require 'pry'; binding.pry
-
-      expect(@merchants).to be_an ActiveRecord::Relation
+      expect(merchants).to be_an ActiveRecord::Relation
     end
 
     it 'most_items' do
@@ -48,7 +46,7 @@ RSpec.describe Merchant, type: :model do
       end_date = '2012-12-01'
       revenue = Merchant.revenue_by_date(start_date, end_date)
       
-      expect(revenue).to be_a Number
+      expect(revenue).to be_an Numeric
     end
   end
 end

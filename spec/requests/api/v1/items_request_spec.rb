@@ -21,6 +21,26 @@ describe 'Items API' do
       end
     end
 
+    it 'responds with all items if per_page is very large' do
+      create_list(:item, 30)
+
+      get '/api/v1/items', params: { per_page: 250_000, page: 1 }
+
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names: true)
+
+      expect(items[:data].count).to eq(30)
+      items[:data].each do |item|
+        expect(item).to have_key(:id)
+        expect(item[:id]).to be_an(String)
+
+        expect(item[:attributes]).to have_key(:name)
+        expect(item[:attributes][:name]).to be_a(String)
+      end
+    end
+
+
     it 'responds with paginated results and page 1 gets first 20' do
       create_list(:item, 30)
 
@@ -142,33 +162,22 @@ describe 'Items API' do
     it 'allows you to create and delete an item' do 
       create_list(:item, 3)
       merchant = create(:merchant)
-      item = Item.new(merchant_id: merchant.id, name: 'Floss', unit_price: '10.00', description: 'blahddy blah')
-      item.save
+      item_params = {name: "Floss",
+        description: "blahhdy blah",
+        unit_price: 10.00,
+        merchant_id: merchant.id}
+
+      headers = {'CONTENT_TYPE' => 'application/json'}
+
+			post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
 
       expect(Item.count).to eq(4)
 
-      get "/api/v1/items/#{item.id}"
-
-      item = JSON.parse(response.body, symbolize_names: true)
+      new_item = Item.last
 
       expect(response).to be_successful
 
-      expect(item).to have_key :data
-      expect(item).to be_a Hash
-
-      expect(item[:data]).to have_key :type
-      expect(item[:data][:type]).to be_a String
-
-      expect(item[:data]).to have_key :id
-      expect(item[:data][:id]).to be_a String
-
-      expect(item[:data]).to have_key :attributes
-      expect(item[:data][:attributes]).to be_a Hash
-
-      expect(item[:data][:attributes]).to have_key :name
-      expect(item[:data][:attributes][:name]).to be_a String
-
-      Item.destroy(item[:data][:id].to_i)
+      delete "/api/v1/items/#{new_item.id}"
 
       expect(Item.count).to eq(3)
     end
@@ -177,16 +186,57 @@ describe 'Items API' do
   describe 'update happy path' do
     it 'allows you to update an item' do 
       merchant = create(:merchant)
-      item = create(:item, name: "name1", merchant_id: merchant.id)
+      old_item = create(:item, name: "name1", merchant_id: merchant.id)
       
-      Item.update(item.id, name: "name2")
+      item_params = {name: "New Name",
+        description: "newdescriptive words",
+        unit_price: 100.01,
+        merchant_id: old_item.merchant_id}
+      
+      headers = {"CONTENT_TYPE" => "application/json"}
 
-      expect(Item.first.name).to eq("name2")
+      patch "/api/v1/items/#{old_item.id}", headers: headers, params: JSON.generate(item: item_params)
 
-      Item.update(item.id, name: "name1")
+      item = Item.find_by(id: old_item.id)
+      expect(response).to be_successful
+      expect(item.name).to_not eq(old_item.name)
+      expect(item.name).to eq(item_params[:name])
+    end
 
-      expect(Item.first.name).to eq("name1")
+    it 'allows you to update partial data' do
+      old_item = create(:item)
+      item_params = {name: "New Name"}
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{old_item.id}", headers: headers, params: JSON.generate(item: item_params)
+
+      item = Item.find_by(id: old_item.id)
+      expect(response).to be_successful
+
+      expect(item.name).to_not eq(old_item.name)
+      expect(item.name).to eq(item_params[:name])
+
+      expect(item.description).to eq(old_item.description)
+      expect(item.unit_price).to eq(old_item.unit_price)
+      expect(item.merchant_id).to eq(old_item.merchant_id)
     end
   end
 
+  describe 'update sad path' do
+    it "can't update if the merchant_id is bad" do
+      merchant = create(:merchant)
+      old_item = create(:item, name: "name1", merchant_id: merchant.id)
+      
+      item_params = {name: "New Name",
+        description: "newdescriptive words",
+        unit_price: 100.01,
+        merchant_id: 435356734}
+      
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{item_params[:merchant_id]}", headers: headers, params: JSON.generate(item: item_params)
+
+      expect(response).to_not be_successful
+    end
+  end
 end
